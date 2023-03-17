@@ -28,10 +28,16 @@ Route::get('/', function () {
 */
 
 Route::get('/', function () {
-    return Inertia::render('Home', [
-        'name' => 'George',
-        'frameworks' => [ 'Laravel', 'VueJS', 'Inertia', 'Tailwind' ]
-    ]);
+    return Inertia::render('Home');
+});
+
+Route::get('/users', function () {
+    sleep(2);
+    return Inertia::render('Users');
+});
+
+Route::get('/settings', function () {
+    return Inertia::render('Settings');
 });
 
 Route::get('/dashboard', function () {
