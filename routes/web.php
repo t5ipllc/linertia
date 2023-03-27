@@ -32,13 +32,31 @@ Route::get('/', function () {
 });
 
 Route::get('/users', function () {
-    sleep(2);
-    return Inertia::render('Users');
+    $users = \App\Models\User::paginate(15)->through(function ($user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            // etc
+        ];
+    });
+    $users = \App\Models\User::all();
+//    dd($users);
+    return Inertia::render('Users',[
+        'users' => $users
+    ]);
 });
 
 Route::get('/settings', function () {
     return Inertia::render('Settings');
 });
+
+Route::post('/frogout', function () {
+    dd("logging out....");
+});
+
+
+
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

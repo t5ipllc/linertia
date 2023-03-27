@@ -1,10 +1,17 @@
+<script setup>
+import ILayout from '../Layouts/ILayout.vue';
+</script>
+
+<script>
+export default {
+    layout: ILayout
+}
+</script>
+
 <template>
-    <div>
-        <Nav />
+    <Head title="Home" />
+    <div class="border border-2 border-green-900">
         <h1 class="text-2xl font-extrabold text-black">Home</h1>
+        <p>This is some paragraph text.</p>
     </div>
 </template>
-
-<script setup>
-import Nav from '@/Shared/Nav.vue';
-</script>
