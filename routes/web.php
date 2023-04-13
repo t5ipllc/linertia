@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,18 +34,41 @@ Route::get('/', function () {
 });
 
 Route::get('/users', function () {
-    $users = \App\Models\User::paginate(15)->through(function ($user) {
+    $users = User::paginate(15)->through(function ($user) {
         return [
             'id' => $user->id,
             'name' => $user->name,
             // etc
         ];
     });
-    $users = \App\Models\User::all();
+    $users = User::query()
+        ->when(Request::input('search'), function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%");
+        })
+        ->select(['id', 'name'])
+        ->paginate()
+        ->withQueryString();
 //    dd($users);
-    return Inertia::render('Users',[
-        'users' => $users
+    return Inertia::render('Users/Index',[
+        'users' => $users,
+        'filters' => Request::only(['search'])
     ]);
+});
+
+Route::get('/users/create', function () {
+    return Inertia::render('Users/Create');
+});
+
+Route::post('/users', function () {
+    $validated = Request::validate([
+        'name' => 'required',
+        'email' => 'required',
+        'password' => 'required'
+    ]);
+
+    User::create($validated);
+
+    return redirect('/users');
 });
 
 Route::get('/settings', function () {
